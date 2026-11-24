@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>កម្មវិធីបង្កើតរូបភាពលទ្ធផលឆ្នោតខ្មែរ</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Khmer & Bold Numbers -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700;900&family=Noto+Sans+Khmer:wght@400;600;700;800&family=Roboto:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Noto Sans Khmer', sans-serif;
+      background-color: #f3f4f6;
+    }
+    .font-khmer-title {
+      font-family: 'Battambang', 'Noto Sans Khmer', sans-serif;
+    }
+    /* Custom scrollbar for smooth mobile & desktop UX */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-gray-800 antialiased pb-10">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-gradient-to-r from-red-700 via-red-600 to-red-700 text-white shadow-lg sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-white text-red-700 flex items-center justify-center font-black text-xl shadow-inner">
+          ឆ្នោត
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold font-khmer-title leading-tight">
+            កម្មវិធីបង្កើតរូបភាពលទ្ធផលឆ្នោតខ្មែរ
+          </h1>
+          <p class="text-xs text-red-100">បំប្លែងអក្សរទៅជារូបភាពរហ័សទាន់ចិត្ត &amp; ផ្ញើចូល Telegram ផ្ទាល់</p>
+        </div>
+      </div>
+      <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-800/70 border border-red-400/30">
+        HTML5 Canvas Pro
+      </span>
+    </div>
+  </header>
+
+  <!-- Notification Toast Banner -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 hidden transform transition-all duration-300 max-w-sm">
+    <div id="toastContent" class="px-4 py-3 rounded-xl shadow-2xl text-white text-sm font-medium flex items-center gap-2.5"></div>
+  </div>
+
+  <!-- Main Workspace Grid -->
+  <main class="max-w-7xl mx-auto px-4 pt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- LEFT PANEL: Input Controls (5 Columns on Large Screens) -->
+    <section class="lg:col-span-5 space-y-5">
+
+      <!-- Card 1: Paste & Auto-Parse Text -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-3">
+          <label for="rawTextInput" class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
+            ១. បិទភ្ជាប់អក្សរលទ្ធផល (Paste Text)
+          </label>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="btnPasteClipboard" class="px-2.5 py-1.5 text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition cursor-pointer">
+              📋 បិទភ្ជាប់ (Paste)
+            </button>
+            <button type="button" id="btnClearText" class="px-2.5 py-1.5 text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg transition cursor-pointer">
+              សម្អាត
+            </button>
+          </div>
+        </div>
+
+        <textarea
+          id="rawTextInput"
+          rows="7"
+          placeholder="បិទភ្ជាប់អក្សរលទ្ធផលនៅទីនេះ..."
+          class="w-full rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 p-3 text-sm leading-relaxed bg-gray-50 focus:bg-white transition outline-none"
+        >លទ្ធផលឆ្នោតខ្មែរ
+ពេលចេញលទ្ធផល: 24/11/2026 08:35
+រង្វាន់ទី1: 19432
+រង្វាន់ទី2: 76760
+រង្វាន់ទី3: 39415
+រង្វាន់ទី4: 98803
+សូមជូនពរសំណាងល្អ។</textarea>
+
+        <div id="parseStatus" class="mt-2 text-xs text-emerald-600 font-medium flex items-center gap-1.5">
+          <span>✅ បានបំបែកទិន្នន័យដោយស្វ័យប្រវត្តិ</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Manual / Synced Fields -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5">
+        <h2 class="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+          ២. កែសម្រួលទិន្នន័យដោយផ្ទាល់ (Manual Edit)
+        </h2>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ម៉ោងចេញលទ្ធផល (Time)</label>
+            <input type="text" id="inputTime" value="8:35AM" class="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm font-bold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1">ថ្ងៃខែឆ្នាំ (Date)</label>
+            <input type="text" id="inputDate" value="24-11-2026" class="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm font-bold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1 text-center">រង្វាន់ A (៥ខ្ទង់)</label>
+            <input type="text" id="inputA" maxlength="5" value="19432" class="w-full text-center tracking-widest rounded-xl border border-gray-300 px-2 py-2 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1 text-center">រង្វាន់ B (៥ខ្ទង់)</label>
+            <input type="text" id="inputB" maxlength="5" value="76760" class="w-full text-center tracking-widest rounded-xl border border-gray-300 px-2 py-2 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1 text-center">រង្វាន់ C (៥ខ្ទង់)</label>
+            <input type="text" id="inputC" maxlength="5" value="39415" class="w-full text-center tracking-widest rounded-xl border border-gray-300 px-2 py-2 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1 text-center">រង្វាន់ D (៥ខ្ទង់)</label>
+            <input type="text" id="inputD" maxlength="5" value="98803" class="w-full text-center tracking-widest rounded-xl border border-gray-300 px-2 py-2 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Template Settings & Custom Upload -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+            ៣. រូបភាពគំរូ (Template)
+          </h2>
+          <button type="button" id="btnResetTemplate" class="hidden text-xs font-semibold text-red-600 hover:underline cursor-pointer">
+            ប្រើគំរូដើមវិញ
+          </button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <label class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border-2 border-dashed border-gray-300 hover:border-red-500 hover:bg-red-50/40 text-sm font-semibold text-gray-700 cursor-pointer transition">
+            <span>🖼️ បញ្ចូលរូបគំរូផ្ទាល់ខ្លួន (Upload)</span>
+            <input type="file" id="customTemplateInput" accept="image/*" class="hidden" />
+          </label>
+        </div>
+
+        <!-- Collapsible Alignment Fine-Tuning Controls (Shown when custom image uploaded or toggled) -->
+        <div class="mt-3 pt-3 border-t border-gray-100">
+          <button type="button" id="toggleAlignBtn" class="w-full flex items-center justify-between text-xs font-bold text-gray-600 hover:text-gray-900 py-1 cursor-pointer">
+            <span>⚙️ សារ៉េទីតាំងអក្សរ &amp; ទំហំលេខ (សម្រាប់រូបគំរូផ្ទាល់ខ្លួន)</span>
+            <span id="alignArrow">▼</span>
+          </button>
+
+          <div id="alignControlsPanel" class="hidden mt-3 space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-200 text-xs">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>ម៉ោង X</span><span id="valTimeX">280</span>
+                </label>
+                <input type="range" id="cfgTimeX" min="50" max="1100" value="280" class="w-full accent-red-600" />
+              </div>
+              <div>
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>ថ្ងៃខែ X</span><span id="valDateX">695</span>
+                </label>
+                <input type="range" id="cfgDateX" min="100" max="1150" value="695" class="w-full accent-red-600" />
+              </div>
+              <div>
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>ម៉ោង/ថ្ងៃខែ Y</span><span id="valHeaderY">225</span>
+                </label>
+                <input type="range" id="cfgHeaderY" min="50" max="500" value="225" class="w-full accent-red-600" />
+              </div>
+              <div>
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>ទំហំអក្សរម៉ោង/ថ្ងៃ</span><span id="valHeaderSize">62</span>
+                </label>
+                <input type="range" id="cfgHeaderSize" min="24" max="110" value="62" class="w-full accent-red-600" />
+              </div>
+              <div>
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>ជួរឈរ ២ខ្ទង់ X</span><span id="valCol2X">482</span>
+                </label>
+                <input type="range" id="cfgCol2X" min="100" max="1100" value="482" class="w-full accent-red-600" />
+              </div>
+              <div>
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>ជួរឈរ ៣ខ្ទង់ X</span><span id="valCol3X">772</span>
+                </label>
+                <input type="range" id="cfgCol3X" min="100" max="1150" value="772" class="w-full accent-red-600" />
+              </div>
+              <div>
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>ជួរដេក A ចាប់ផ្តើម Y</span><span id="valRowStartY">336</span>
+                </label>
+                <input type="range" id="cfgRowStartY" min="100" max="600" value="336" class="w-full accent-red-600" />
+              </div>
+              <div>
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>គម្លាតជួរ A-D</span><span id="valRowGap">114</span>
+                </label>
+                <input type="range" id="cfgRowGap" min="40" max="220" value="114" class="w-full accent-red-600" />
+              </div>
+              <div class="col-span-2">
+                <label class="font-semibold text-gray-700 flex justify-between">
+                  <span>ទំហំលេខរង្វាន់ (Font Size)</span><span id="valNumSize">82</span>
+                </label>
+                <input type="range" id="cfgNumSize" min="30" max="140" value="82" class="w-full accent-red-600" />
+              </div>
+            </div>
+            <button type="button" id="btnResetAlign" class="w-full py-1.5 bg-white border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 cursor-pointer">
+              កំណត់ទីតាំងដើមឡើងវិញ (Reset Alignment)
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT PANEL: Live Canvas Preview, Download & Telegram Post (7 Columns) -->
+    <section class="lg:col-span-7 space-y-5">
+
+      <!-- Live Canvas Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            រូបភាពលទ្ធផលជាក់ស្តែង (Live Preview)
+          </h2>
+          <span id="canvasDimLabel" class="text-xs text-gray-400 font-mono">1200 × 800 px</span>
+        </div>
+
+        <!-- Responsive Canvas Container -->
+        <div class="w-full rounded-xl overflow-hidden border border-gray-300 bg-gray-100 shadow-inner">
+          <canvas id="resultCanvas" class="w-full h-auto block"></canvas>
+        </div>
+
+        <!-- Primary Action Buttons -->
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            type="button"
+            id="btnDownload"
+            class="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-base shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3" />
+            </svg>
+            <span>ទាញយករូបភាព (Download JPG)</span>
+          </button>
+
+          <button
+            type="button"
+            id="btnCopyImage"
+            class="w-full py-3.5 px-5 rounded-xl bg-gray-800 hover:bg-gray-900 text-white font-bold text-base shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+            </svg>
+            <span>ចម្លងរូបភាព (Copy Image)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Direct Telegram Posting Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5">
+        <button type="button" id="toggleTelegramBtn" class="w-full flex items-center justify-between text-left cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-sky-500 text-white flex items-center justify-center shadow-sm">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-gray-900">ផ្ញើចូល Telegram Channel / Group ផ្ទាល់</h3>
+              <p class="text-xs text-gray-500">ភ្ជាប់ Bot Token ដើម្បីបង្ហោះរូបភាពដោយចុចតែម្តង</p>
+            </div>
+          </div>
+          <span id="telegramArrow" class="text-gray-500 font-bold text-sm">▼</span>
+        </button>
+
+        <div id="telegramPanel" class="mt-4 pt-4 border-t border-gray-100 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Telegram Bot Token (@BotFather)</label>
+              <input
+                type="password"
+                id="tgBotToken"
+                placeholder="123456789:ABCdefGHIjklMNOpqr..."
+                class="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Channel Username ឬ Chat ID</label>
+              <input
+                type="text"
+                id="tgChatId"
+                placeholder="@channel_username ឬ -100123456789"
+                class="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <input
+              type="text"
+              id="tgCaption"
+              placeholder="សារភ្ជាប់ជាមួយរូបភាព (Caption - ដាក់ឬមិនដាក់ក៏បាន)"
+              class="w-full sm:flex-1 rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none"
+            />
+            <button
+              type="button"
+              id="btnSendTelegram"
+              class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+            >
+              <span>🚀 ផ្ញើរូបភាពចូល Channel</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-gray-400">
+            * ចំណាំ៖ ត្រូវប្រាកដថាអ្នកបានបញ្ចូល Bot ជា Admin នៅក្នុង Channel ឬ Group របស់អ្នករួចរាល់ហើយ។ ព័ត៌មាន Token ត្រូវបានរក្សាទុកក្នុង Browser របស់អ្នកផ្ទាល់។
+          </p>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    /**
+     * ============================================================================
+     * KHMER LOTTERY RESULT IMAGE GENERATOR - APPLICATION LOGIC
+     * ============================================================================
+     */
+    const canvas = document.getElementById('resultCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // DOM Elements
+    const rawTextInput = document.getElementById('rawTextInput');
+    const parseStatus = document.getElementById('parseStatus');
+    const inputTime = document.getElementById('inputTime');
+    const inputDate = document.getElementById('inputDate');
+    const inputA = document.getElementById('inputA');
+    const inputB = document.getElementById('inputB');
+    const inputC = document.getElementById('inputC');
+    const inputD = document.getElementById('inputD');
+
+    const customTemplateInput = document.getElementById('customTemplateInput');
+    const btnResetTemplate = document.getElementById('btnResetTemplate');
+    const canvasDimLabel = document.getElementById('canvasDimLabel');
+
+    // Alignment Sliders
+    const defaultAlignConfig = {
+      timeX: 280,
+      dateX: 695,
+      headerY: 225,
+      headerSize: 62,
+      col2X: 482,
+      col3X: 772,
+      rowStartY: 336,
+      rowGap: 114,
+      numSize: 82
+    };
+
+    let alignConfig = { ...defaultAlignConfig };
+    try {
+      const savedAlign = localStorage.getItem('khmer_lottery_align_v1');
+      if (savedAlign) alignConfig = { ...defaultAlignConfig, ...JSON.parse(savedAlign) };
+    } catch (e) { /* Ignore storage errors */ }
+
+    let customTemplateImage = null;
+
+    // Schedule times shown in the right sidebar of the built-in template
+    const SCHEDULE_TIMES = [
+      '08:35AM', '09:35AM', '10:35AM', '12:00PM', '01:00PM',
+      '02:45PM', '03:45PM', '05:00PM', '06:00PM', '07:45PM'
+    ];
+
+    /**
+     * Show non-blocking Toast notification
+     */
+    let toastTimer = null;
+    function showToast(message, type = 'success') {
+      const box = document.getElementById('toastBox');
+      const content = document.getElementById('toastContent');
+      content.textContent = message;
+      content.className = 'px-4 py-3 rounded-xl shadow-2xl text-white text-sm font-semibold flex items-center gap-2 ' +
+        (type === 'error' ? 'bg-red-600' : type === 'info' ? 'bg-sky-600' : 'bg-emerald-600');
+      box.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => box.classList.add('hidden'), 3500);
+    }
+
+    /**
+     * Convert 24h "08:35" -> "8:35AM" or "14:45" -> "2:45PM"
+     */
+    function formatTo12Hour(timeStr) {
+      const match = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+      if (!match) return timeStr;
+      let hours = parseInt(match[1], 10);
+      const minutes = match[2];
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      if (hours === 0) hours = 12;
+      return `${hours}:${minutes}${ampm}`;
+    }
+
+    /**
+     * Parse pasted text block and populate manual inputs
+     */
+    function parseRawText(text) {
+      let foundCount = 0;
+
+      // Match Date & Time: e.g. 24/11/2026 08:35 or 24-11-2026 08:35
+      const dtMatch = text.match(/(\d{2}[\/\-]\d{2}[\/\-]\d{4})\s+(\d{1,2}:\d{2}(?:\s*[APMapm]{2})?)/);
+      if (dtMatch) {
+        inputDate.value = dtMatch[1].replace(/\//g, '-');
+        const rawTime = dtMatch[2].trim();
+        inputTime.value = /[APMapm]/.test(rawTime) ? rawTime.toUpperCase().replace(/\s+/g, '') : formatTo12Hour(rawTime);
+        foundCount++;
+      }
+
+      // Match Prizes 1 to 4 (5-digit numbers)
+      const r1 = text.match(/រង្វាន់ទី\s*1\s*[:：\-]?\s*(\d{5})/);
+      const r2 = text.match(/រង្វាន់ទី\s*2\s*[:：\-]?\s*(\d{5})/);
+      const r3 = text.match(/រង្វាន់ទី\s*3\s*[:：\-]?\s*(\d{5})/);
+      const r4 = text.match(/រង្វាន់ទី\s*4\s*[:：\-]?\s*(\d{5})/);
+
+      if (r1) { inputA.value = r1[1]; foundCount++; }
+      if (r2) { inputB.value = r2[1]; foundCount++; }
+      if (r3) { inputC.value = r3[1]; foundCount++; }
+      if (r4) { inputD.value = r4[1]; foundCount++; }
+
+      // Fallback: if labels weren't matched, try finding any four 5-digit numbers in order
+      if (!r1 && !r2 && !r3 && !r4) {
+        const fiveDigits = text.match(/\b\d{5}\b/g);
+        if (fiveDigits && fiveDigits.length >= 4) {
+          inputA.value = fiveDigits[0];
+          inputB.value = fiveDigits[1];
+          inputC.value = fiveDigits[2];
+          inputD.value = fiveDigits[3];
+          foundCount += 4;
+        }
+      }
+
+      if (foundCount >= 4) {
+        parseStatus.innerHTML = '<span>✅ បានបំបែកទិន្នន័យដោយស្វ័យប្រវត្តិរួចរាល់</span>';
+        parseStatus.className = 'mt-2 text-xs text-emerald-600 font-medium flex items-center gap-1.5';
+      } else {
+        parseStatus.innerHTML = '<span>⚠️ សូមពិនិត្យទម្រង់អក្សរ ឬកែលេខនៅប្រអប់ខាងក្រោម</span>';
+        parseStatus.className = 'mt-2 text-xs text-amber-600 font-medium flex items-center gap-1.5';
+      }
+
+      renderCanvas();
+    }
+
+    /**
+     * Draw a rounded rectangle helper
+     */
+    function drawRoundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    /**
+     * Draw the Alarm Clock Vector Icon on the Built-in Template
+     */
+    function drawAlarmClock(ctx, cx, cy) {
+      const red = '#CC0000';
+      ctx.save();
+
+      // Left & Right Bells
+      ctx.fillStyle = red;
+      ctx.beginPath();
+      ctx.arc(cx - 42, cy - 42, 22, Math.PI * 0.75, Math.PI * 1.75);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(cx + 42, cy - 42, 22, Math.PI * 1.25, Math.PI * 0.25);
+      ctx.fill();
+
+      // Top Hammer
+      ctx.fillRect(cx - 5, cy - 66, 10, 14);
+      ctx.fillRect(cx - 16, cy - 68, 32, 6);
+
+      // Legs
+      ctx.lineWidth = 7;
+      ctx.strokeStyle = red;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(cx - 32, cy + 42);
+      ctx.lineTo(cx - 44, cy + 56);
+      ctx.moveTo(cx + 32, cy + 42);
+      ctx.lineTo(cx + 44, cy + 56);
+      ctx.stroke();
+
+      // Outer Clock Circle
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 52, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineWidth = 7;
+      ctx.strokeStyle = red;
+      ctx.stroke();
+
+      // Tick marks
+      ctx.lineWidth = 2.5;
+      for (let i = 0; i < 12; i++) {
+        const angle = (i * Math.PI) / 6;
+        const r1 = 38;
+        const r2 = 44;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(angle) * r1, cy + Math.sin(angle) * r1);
+        ctx.lineTo(cx + Math.cos(angle) * r2, cy + Math.sin(angle) * r2);
+        ctx.stroke();
+      }
+
+      // Clock Hands (pointing ~11:18 like template)
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx - 5, cy - 28);
+      ctx.stroke();
+
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + 32, cy + 10);
+      ctx.stroke();
+
+      // Center dot
+      ctx.fillStyle = red;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    /**
+     * Draw the Right-Side Decorative Lottery Circles Logo in the Red Banner
+     */
+    function drawBannerLogo(ctx) {
+      const circles = [
+        { x: 925, y: 74, r: 44, char: 'ឆ្នោ', border: '#FACC15', size: 30 },
+        { x: 995, y: 84, r: 32, char: 'ត', border: '#FDE047', size: 28 },
+        { x: 1058, y: 70, r: 44, char: 'ខ្មែ', border: '#FB923C', size: 30 },
+        { x: 1118, y: 74, r: 32, char: 'រ', border: '#FDBA74', size: 28 }
+      ];
+
+      circles.forEach(c => {
+        ctx.save();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = c.border;
+        ctx.stroke();
+
+        ctx.fillStyle = '#DC2626';
+        ctx.font = `900 ${c.size}px "Battambang", "Noto Sans Khmer", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(c.char, c.x, c.y + 3);
+        ctx.restore();
+      });
+
+      // Tagline below circles
+      ctx.save();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '700 22px "Battambang", "Noto Sans Khmer", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('លេងស្រួល ងាយឈ្នះ', 1020, 146);
+      ctx.restore();
+    }
+
+    /**
+     * Render the Built-in High-Res Lottery Template (1200 x 800)
+     */
+    function drawBuiltInTemplate() {
+      const W = 1200;
+      const H = 800;
+      canvas.width = W;
+      canvas.height = H;
+      canvasDimLabel.textContent = `${W} × ${H} px`;
+
+      const RED = '#CC0000';
+
+      // 1. White Background
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, W, H);
+
+      // 2. Top Red Header Banner
+      ctx.fillStyle = RED;
+      ctx.fillRect(0, 0, W, 170);
+
+      // Main Header Khmer Title
+      ctx.save();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 94px "Battambang", "Noto Sans Khmer", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('លទ្ធផលឆ្នោតខ្មែរ', 95, 95);
+      ctx.restore();
+
+      // Header Right Emblem
+      drawBannerLogo(ctx);
+
+      // 3. Bottom Red Footer Bar
+      ctx.fillStyle = RED;
+      ctx.fillRect(0, 752, W, 48);
+
+      // 4. Right Sidebar: Alarm Clock & Time Schedule Pills
+      const sidebarX = 1062;
+      drawAlarmClock(ctx, sidebarX, 242);
+
+      const normalizedInputTime = inputTime.value.trim().toUpperCase().replace(/^(\d):/, '0$1:');
+      SCHEDULE_TIMES.forEach((slot, idx) => {
+        const pillY = 310 + idx * 43;
+        const pillW = 108;
+        const pillH = 34;
+        const isActive = slot === normalizedInputTime;
+
+        ctx.save();
+        drawRoundRect(ctx, sidebarX - pillW / 2, pillY, pillW, pillH, 17);
+        if (isActive) {
+          ctx.fillStyle = RED;
+          ctx.fill();
+        } else {
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fill();
+          ctx.lineWidth = 2.2;
+          ctx.strokeStyle = RED;
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = isActive ? '#FFFFFF' : RED;
+        ctx.font = '700 16px "Roboto", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(slot, sidebarX, pillY + pillH / 2 + 1);
+        ctx.restore();
+      });
+
+      // 5. Main 4-Row Grid (A, B, C, D)
+      const letters = ['A', 'B', 'C', 'D'];
+      const col1X = 124;
+      const col1W = 222;
+      const col2X = 354;
+      const col2W = 272;
+      const col3X = 634;
+      const col3W = 294;
+      const startY = 278;
+      const rowH = 106;
+      const rowGap = 8;
+
+      ctx.strokeStyle = RED;
+      ctx.lineWidth = 3;
+
+      letters.forEach((letter, idx) => {
+        const y = startY + idx * (rowH + rowGap);
+
+        // Draw 3 boxes per row
+        ctx.strokeRect(col1X, y, col1W, rowH);
+        ctx.strokeRect(col2X, y, col2W, rowH);
+        ctx.strokeRect(col3X, y, col3W, rowH);
+
+        // Red Circle around Letter A/B/C/D
+        const centerX = col1X + col1W / 2;
+        const centerY = y + rowH / 2;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 44, 0, Math.PI * 2);
+        ctx.lineWidth = 6.5;
+        ctx.strokeStyle = RED;
+        ctx.stroke();
+
+        ctx.fillStyle = RED;
+        ctx.font = '900 58px "Roboto", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(letter, centerX, centerY + 3);
+        ctx.restore();
+      });
+
+      // 6. Draw Dynamic Time, Date & Prize Numbers
+      drawDynamicTextOverlay({
+        timeX: 280,
+        dateX: 695,
+        headerY: 226,
+        headerSize: 62,
+        col2X: col2X + col2W / 2,
+        col3X: col3X + col3W / 2,
+        rowStartY: startY + rowH / 2,
+        rowGap: rowH + rowGap,
+        numSize: 80
+      });
+    }
+
+    /**
+     * Draw Time, Date, and Split Numbers (2 digits + 3 digits) onto Canvas
+     */
+    function drawDynamicTextOverlay(cfg) {
+      const RED = '#CC0000';
+      ctx.save();
+      ctx.fillStyle = RED;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Time & Date Header
+      ctx.font = `700 ${cfg.headerSize}px "Roboto", "Noto Sans Khmer", sans-serif`;
+      ctx.fillText(inputTime.value.trim(), cfg.timeX, cfg.headerY);
+      ctx.fillText(inputDate.value.trim(), cfg.dateX, cfg.headerY);
+
+      // Prize Rows A, B, C, D
+      const rawPrizes = [
+        inputA.value.trim(),
+        inputB.value.trim(),
+        inputC.value.trim(),
+        inputD.value.trim()
+      ];
+
+      ctx.font = `900 ${cfg.numSize}px "Roboto", sans-serif`;
+      rawPrizes.forEach((val, idx) => {
+        const y = cfg.rowStartY + idx * cfg.rowGap;
+        const twoDigits = val.slice(0, 2);
+        const threeDigits = val.slice(2, 5);
+
+        if (twoDigits) ctx.fillText(twoDigits, cfg.col2X, y + 3);
+        if (threeDigits) ctx.fillText(threeDigits, cfg.col3X, y + 3);
+      });
+
+      ctx.restore();
+    }
+
+    /**
+     * Master Canvas Render Function
+     */
+    function renderCanvas() {
+      if (customTemplateImage) {
+        const W = customTemplateImage.naturalWidth || 1200;
+        const H = customTemplateImage.naturalHeight || 800;
+        canvas.width = W;
+        canvas.height = H;
+        canvasDimLabel.textContent = `${W} × ${H} px`;
+
+        ctx.clearRect(0, 0, W, H);
+        ctx.drawImage(customTemplateImage, 0, 0, W, H);
+        drawDynamicTextOverlay(alignConfig);
+      } else {
+        drawBuiltInTemplate();
+      }
+    }
+
+    /**
+     * Event Listeners for Live Updates
+     */
+    rawTextInput.addEventListener('input', () => {
+      parseRawText(rawTextInput.value);
+    });
+
+    [inputTime, inputDate, inputA, inputB, inputC, inputD].forEach(el => {
+      el.addEventListener('input', renderCanvas);
+    });
+
+    // Clipboard Paste Button
+    document.getElementById('btnPasteClipboard').addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          rawTextInput.value = text;
+          parseRawText(text);
+          showToast('✅ បានបិទភ្ជាប់អក្សរពី Clipboard រួចរាល់!');
+        }
+      } catch (err) {
+        rawTextInput.focus();
+        showToast('សូមចុច Paste (Ctrl+V ឬ សង្កត់លើប្រអប់អក្សរ) ដោយផ្ទាល់', 'info');
+      }
+    });
+
+    // Clear Text Button
+    document.getElementById('btnClearText').addEventListener('click', () => {
+      rawTextInput.value = '';
+      rawTextInput.focus();
+    });
+
+    // Custom Template Upload Handler
+    customTemplateInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          customTemplateImage = img;
+          btnResetTemplate.classList.remove('hidden');
+          // Auto-open alignment controls so user can adjust if needed
+          document.getElementById('alignControlsPanel').classList.remove('hidden');
+          document.getElementById('alignArrow').textContent = '▲';
+          renderCanvas();
+          showToast('🖼️ បានបញ្ចូលរូបគំរូផ្ទាល់ខ្លួនរួចរាល់!');
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Reset back to built-in template
+    btnResetTemplate.addEventListener('click', () => {
+      customTemplateImage = null;
+      customTemplateInput.value = '';
+      btnResetTemplate.classList.add('hidden');
+      renderCanvas();
+      showToast('បានត្រឡប់ទៅប្រើរូបគំរូដើមវិញ');
+    });
+
+    // Alignment Sliders Sync
+    const sliderBindings = [
+      ['cfgTimeX', 'valTimeX', 'timeX'],
+      ['cfgDateX', 'valDateX', 'dateX'],
+      ['cfgHeaderY', 'valHeaderY', 'headerY'],
+      ['cfgHeaderSize', 'valHeaderSize', 'headerSize'],
+      ['cfgCol2X', 'valCol2X', 'col2X'],
+      ['cfgCol3X', 'valCol3X', 'col3X'],
+      ['cfgRowStartY', 'valRowStartY', 'rowStartY'],
+      ['cfgRowGap', 'valRowGap', 'rowGap'],
+      ['cfgNumSize', 'valNumSize', 'numSize']
+    ];
+
+    function syncSlidersFromConfig() {
+      sliderBindings.forEach(([sliderId, labelId, key]) => {
+        const slider = document.getElementById(sliderId);
+        const label = document.getElementById(labelId);
+        slider.value = alignConfig[key];
+        label.textContent = alignConfig[key];
+      });
+    }
+
+    sliderBindings.forEach(([sliderId, labelId, key]) => {
+      const slider = document.getElementById(sliderId);
+      const label = document.getElementById(labelId);
+      slider.addEventListener('input', () => {
+        alignConfig[key] = parseInt(slider.value, 10);
+        label.textContent = alignConfig[key];
+        try {
+          localStorage.setItem('khmer_lottery_align_v1', JSON.stringify(alignConfig));
+        } catch (e) {}
+        renderCanvas();
+      });
+    });
+
+    document.getElementById('btnResetAlign').addEventListener('click', () => {
+      alignConfig = { ...defaultAlignConfig };
+      syncSlidersFromConfig();
+      try {
+        localStorage.removeItem('khmer_lottery_align_v1');
+      } catch (e) {}
+      renderCanvas();
+      showToast('បានកំណត់ទីតាំងដើមឡើងវិញ');
+    });
+
+    // Collapsible Toggles
+    document.getElementById('toggleAlignBtn').addEventListener('click', () => {
+      const panel = document.getElementById('alignControlsPanel');
+      const arrow = document.getElementById('alignArrow');
+      const isHidden = panel.classList.toggle('hidden');
+      arrow.textContent = isHidden ? '▼' : '▲';
+    });
+
+    document.getElementById('toggleTelegramBtn').addEventListener('click', () => {
+      const panel = document.getElementById('telegramPanel');
+      const arrow = document.getElementById('telegramArrow');
+      const isHidden = panel.classList.toggle('hidden');
+      arrow.textContent = isHidden ? '▼' : '▲';
+    });
+
+    // Download JPG Button
+    document.getElementById('btnDownload').addEventListener('click', () => {
+      const link = document.createElement('a');
+      const safeDate = (inputDate.value.trim() || 'result').replace(/[^a-zA-Z0-9\-]/g, '-');
+      const safeTime = (inputTime.value.trim() || '').replace(/[^a-zA-Z0-9]/g, '');
+      link.download = `Khmer_Lottery_${safeDate}_${safeTime}.jpg`;
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      showToast('✅ កំពុងទាញយករូបភាព JPG...');
+    });
+
+    // Copy Image to Clipboard
+    document.getElementById('btnCopyImage').addEventListener('click', () => {
+      canvas.toBlob(async (blob) => {
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          showToast('📋 បានចម្លងរូបភាព! អ្នកអាច Paste ចូល Telegram ផ្ទាល់បាន');
+        } catch (err) {
+          showToast('Browser មិនគាំទ្រការ Copy រូបភាពផ្ទាល់ទេ សូមចុច Download JPG ជំនួស', 'error');
+        }
+      }, 'image/png');
+    });
+
+    // Telegram Integration: Load & Save Credentials
+    const tgBotToken = document.getElementById('tgBotToken');
+    const tgChatId = document.getElementById('tgChatId');
+    const tgCaption = document.getElementById('tgCaption');
+
+    try {
+      tgBotToken.value = localStorage.getItem('khmer_lottery_tg_token') || '';
+      tgChatId.value = localStorage.getItem('khmer_lottery_tg_chatid') || '';
+    } catch (e) {}
+
+    tgBotToken.addEventListener('change', () => {
+      try { localStorage.setItem('khmer_lottery_tg_token', tgBotToken.value.trim()); } catch (e) {}
+    });
+    tgChatId.addEventListener('change', () => {
+      try { localStorage.setItem('khmer_lottery_tg_chatid', tgChatId.value.trim()); } catch (e) {}
+    });
+
+    // Send Photo directly to Telegram Channel/Group via Bot API
+    document.getElementById('btnSendTelegram').addEventListener('click', () => {
+      const token = tgBotToken.value.trim();
+      const chatId = tgChatId.value.trim();
+      const caption = tgCaption.value.trim();
+
+      if (!token || !chatId) {
+        showToast('⚠️ សូមបំពេញ Bot Token និង Channel/Chat ID ជាមុនសិន!', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btnSendTelegram');
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ កំពុងផ្ញើរូបភាព...</span>';
+
+      canvas.toBlob(async (blob) => {
+        try {
+          const formData = new FormData();
+          formData.append('chat_id', chatId);
+          formData.append('photo', blob, 'lottery_result.jpg');
+          if (caption) {
+            formData.append('caption', caption);
+          }
+
+          const response = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+          });
+          const result = await response.json();
+
+          if (result.ok) {
+            showToast('🚀 បានបង្ហោះរូបភាពចូល Telegram Channel ដោយជោគជ័យ!');
+          } else {
+            showToast(`❌ បរាជ័យ៖ ${result.description || 'សូមពិនិត្យ Token និងសិទ្ធិ Admin របស់ Bot'}`, 'error');
+          }
+        } catch (err) {
+          showToast('❌ មានបញ្ហាការតភ្ជាប់អ៊ីនធឺណិត ឬ Token មិនត្រឹមត្រូវ', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        }
+      }, 'image/jpeg', 0.95);
+    });
+
+    // Initial Boot
+    window.addEventListener('load', () => {
+      syncSlidersFromConfig();
+      // Wait for Google Fonts to finish loading before initial draw
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          parseRawText(rawTextInput.value);
+        });
+      } else {
+        parseRawText(rawTextInput.value);
+      }
+    });
+  </script>
+</body>
+</html>
