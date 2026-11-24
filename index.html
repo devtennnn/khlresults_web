@@ -64,14 +64,17 @@
 
       <!-- Card 1: Paste & Auto-Parse Text -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5">
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
           <label for="rawTextInput" class="text-base font-bold text-gray-900 flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
             ១. បិទភ្ជាប់អក្សរលទ្ធផល (Paste Text)
           </label>
-          <div class="flex items-center gap-1.5">
+          <div class="flex flex-wrap items-center gap-1.5">
             <button type="button" id="btnPasteClipboard" class="px-2.5 py-1.5 text-xs font-semibold bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition cursor-pointer">
               📋 បិទភ្ជាប់ (Paste)
+            </button>
+            <button type="button" id="btnSampleText" class="px-2.5 py-1.5 text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg transition cursor-pointer">
+              ✨ សាកល្បងទិន្នន័យគំរូ (Sample)
             </button>
             <button type="button" id="btnClearText" class="px-2.5 py-1.5 text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg transition cursor-pointer">
               សម្អាត
@@ -82,8 +85,8 @@
         <textarea
           id="rawTextInput"
           rows="7"
-          placeholder="បិទភ្ជាប់អក្សរលទ្ធផលនៅទីនេះ..."
-          class="w-full rounded-xl border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 p-3 text-sm leading-relaxed bg-gray-50 focus:bg-white transition outline-none"
+          placeholder="បិទភ្ជាប់អក្សរលទ្ធផលនៅទីនេះ...&#10;ឧទាហរណ៍៖&#10;ពេលចេញលទ្ធផល: 24/11/2026 08:35&#10;រង្វាន់ទី1: 19432&#10;រង្វាន់ទី2: 76760&#10;រង្វាន់ទី3: 39415&#10;រង្វាន់ទី4: 98803"
+          class="w-full rounded-xl border border-gray-300 p-3 text-sm leading-relaxed focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition"
         >លទ្ធផលឆ្នោតខ្មែរ
 ពេលចេញលទ្ធផល: 24/11/2026 08:35
 រង្វាន់ទី1: 19432
@@ -93,11 +96,11 @@
 សូមជូនពរសំណាងល្អ។</textarea>
 
         <div id="parseStatus" class="mt-2 text-xs text-emerald-600 font-medium flex items-center gap-1.5">
-          <span>✅ បានបំបែកទិន្នន័យដោយស្វ័យប្រវត្តិ</span>
+          <span>✅ បានបំបែកទិន្នន័យដោយស្វ័យប្រវត្តិរួចរាល់</span>
         </div>
       </div>
 
-      <!-- Card 2: Manual / Synced Fields -->
+      <!-- Card 2: Manual / Synced Fields (2-digit & 3-digit split) -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5">
         <h2 class="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
@@ -115,22 +118,53 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1 text-center">រង្វាន់ A (៥ខ្ទង់)</label>
-            <input type="text" id="inputA" maxlength="5" value="19432" class="w-full text-center tracking-widest rounded-xl border border-gray-300 px-2 py-2 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- Row A -->
+          <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+            <div class="text-xs font-bold text-gray-700 mb-1.5 flex items-center justify-between">
+              <span>រង្វាន់ A</span>
+              <span class="text-[11px] text-gray-400">២ខ្ទង់ / ៣ខ្ទង់</span>
+            </div>
+            <div class="grid grid-cols-5 gap-1.5">
+              <input type="text" id="inputA2" maxlength="2" value="19" aria-label="រង្វាន់ A ២ខ្ទង់" class="col-span-2 text-center tracking-wider rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+              <input type="text" id="inputA3" maxlength="3" value="432" aria-label="រង្វាន់ A ៣ខ្ទង់" class="col-span-3 text-center tracking-wider rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1 text-center">រង្វាន់ B (៥ខ្ទង់)</label>
-            <input type="text" id="inputB" maxlength="5" value="76760" class="w-full text-center tracking-widest rounded-xl border border-gray-300 px-2 py-2 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+
+          <!-- Row B -->
+          <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+            <div class="text-xs font-bold text-gray-700 mb-1.5 flex items-center justify-between">
+              <span>រង្វាន់ B</span>
+              <span class="text-[11px] text-gray-400">២ខ្ទង់ / ៣ខ្ទង់</span>
+            </div>
+            <div class="grid grid-cols-5 gap-1.5">
+              <input type="text" id="inputB2" maxlength="2" value="76" aria-label="រង្វាន់ B ២ខ្ទង់" class="col-span-2 text-center tracking-wider rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+              <input type="text" id="inputB3" maxlength="3" value="760" aria-label="រង្វាន់ B ៣ខ្ទង់" class="col-span-3 text-center tracking-wider rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1 text-center">រង្វាន់ C (៥ខ្ទង់)</label>
-            <input type="text" id="inputC" maxlength="5" value="39415" class="w-full text-center tracking-widest rounded-xl border border-gray-300 px-2 py-2 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+
+          <!-- Row C -->
+          <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+            <div class="text-xs font-bold text-gray-700 mb-1.5 flex items-center justify-between">
+              <span>រង្វាន់ C</span>
+              <span class="text-[11px] text-gray-400">២ខ្ទង់ / ៣ខ្ទង់</span>
+            </div>
+            <div class="grid grid-cols-5 gap-1.5">
+              <input type="text" id="inputC2" maxlength="2" value="39" aria-label="រង្វាន់ C ២ខ្ទង់" class="col-span-2 text-center tracking-wider rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+              <input type="text" id="inputC3" maxlength="3" value="415" aria-label="រង្វាន់ C ៣ខ្ទង់" class="col-span-3 text-center tracking-wider rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1 text-center">រង្វាន់ D (៥ខ្ទង់)</label>
-            <input type="text" id="inputD" maxlength="5" value="98803" class="w-full text-center tracking-widest rounded-xl border border-gray-300 px-2 py-2 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+
+          <!-- Row D -->
+          <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+            <div class="text-xs font-bold text-gray-700 mb-1.5 flex items-center justify-between">
+              <span>រង្វាន់ D</span>
+              <span class="text-[11px] text-gray-400">២ខ្ទង់ / ៣ខ្ទង់</span>
+            </div>
+            <div class="grid grid-cols-5 gap-1.5">
+              <input type="text" id="inputD2" maxlength="2" value="98" aria-label="រង្វាន់ D ២ខ្ទង់" class="col-span-2 text-center tracking-wider rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+              <input type="text" id="inputD3" maxlength="3" value="803" aria-label="រង្វាន់ D ៣ខ្ទង់" class="col-span-3 text-center tracking-wider rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-base font-extrabold text-red-700 focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none" />
+            </div>
           </div>
         </div>
       </div>
@@ -165,57 +199,57 @@
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>ម៉ោង X</span><span id="valTimeX">280</span>
+                  <span>ម៉ោង X</span><span id="valTimeX">235</span>
                 </label>
-                <input type="range" id="cfgTimeX" min="50" max="1100" value="280" class="w-full accent-red-600" />
+                <input type="range" id="cfgTimeX" min="50" max="950" value="235" class="w-full accent-red-600" />
               </div>
               <div>
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>ថ្ងៃខែ X</span><span id="valDateX">695</span>
+                  <span>ថ្ងៃខែ X</span><span id="valDateX">580</span>
                 </label>
-                <input type="range" id="cfgDateX" min="100" max="1150" value="695" class="w-full accent-red-600" />
+                <input type="range" id="cfgDateX" min="100" max="980" value="580" class="w-full accent-red-600" />
               </div>
               <div>
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>ម៉ោង/ថ្ងៃខែ Y</span><span id="valHeaderY">225</span>
+                  <span>ម៉ោង/ថ្ងៃខែ Y</span><span id="valHeaderY">188</span>
                 </label>
-                <input type="range" id="cfgHeaderY" min="50" max="500" value="225" class="w-full accent-red-600" />
+                <input type="range" id="cfgHeaderY" min="50" max="450" value="188" class="w-full accent-red-600" />
               </div>
               <div>
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>ទំហំអក្សរម៉ោង/ថ្ងៃ</span><span id="valHeaderSize">62</span>
+                  <span>ទំហំអក្សរម៉ោង/ថ្ងៃ</span><span id="valHeaderSize">52</span>
                 </label>
-                <input type="range" id="cfgHeaderSize" min="24" max="110" value="62" class="w-full accent-red-600" />
+                <input type="range" id="cfgHeaderSize" min="20" max="96" value="52" class="w-full accent-red-600" />
               </div>
               <div>
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>ជួរឈរ ២ខ្ទង់ X</span><span id="valCol2X">482</span>
+                  <span>ជួរឈរ ២ខ្ទង់ X</span><span id="valCol2X">403</span>
                 </label>
-                <input type="range" id="cfgCol2X" min="100" max="1100" value="482" class="w-full accent-red-600" />
+                <input type="range" id="cfgCol2X" min="100" max="950" value="403" class="w-full accent-red-600" />
               </div>
               <div>
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>ជួរឈរ ៣ខ្ទង់ X</span><span id="valCol3X">772</span>
+                  <span>ជួរឈរ ៣ខ្ទង់ X</span><span id="valCol3X">645</span>
                 </label>
-                <input type="range" id="cfgCol3X" min="100" max="1150" value="772" class="w-full accent-red-600" />
+                <input type="range" id="cfgCol3X" min="100" max="980" value="645" class="w-full accent-red-600" />
               </div>
               <div>
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>ជួរដេក A ចាប់ផ្តើម Y</span><span id="valRowStartY">336</span>
+                  <span>ជួរដេក A ចាប់ផ្តើម Y</span><span id="valRowStartY">282</span>
                 </label>
-                <input type="range" id="cfgRowStartY" min="100" max="600" value="336" class="w-full accent-red-600" />
+                <input type="range" id="cfgRowStartY" min="100" max="500" value="282" class="w-full accent-red-600" />
               </div>
               <div>
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>គម្លាតជួរ A-D</span><span id="valRowGap">114</span>
+                  <span>គម្លាតជួរ A-D</span><span id="valRowGap">95</span>
                 </label>
-                <input type="range" id="cfgRowGap" min="40" max="220" value="114" class="w-full accent-red-600" />
+                <input type="range" id="cfgRowGap" min="40" max="180" value="95" class="w-full accent-red-600" />
               </div>
               <div class="col-span-2">
                 <label class="font-semibold text-gray-700 flex justify-between">
-                  <span>ទំហំលេខរង្វាន់ (Font Size)</span><span id="valNumSize">82</span>
+                  <span>ទំហំលេខរង្វាន់ (Font Size)</span><span id="valNumSize">68</span>
                 </label>
-                <input type="range" id="cfgNumSize" min="30" max="140" value="82" class="w-full accent-red-600" />
+                <input type="range" id="cfgNumSize" min="24" max="120" value="68" class="w-full accent-red-600" />
               </div>
             </div>
             <button type="button" id="btnResetAlign" class="w-full py-1.5 bg-white border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 cursor-pointer">
@@ -237,7 +271,7 @@
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
             រូបភាពលទ្ធផលជាក់ស្តែង (Live Preview)
           </h2>
-          <span id="canvasDimLabel" class="text-xs text-gray-400 font-mono">1200 × 800 px</span>
+          <span id="canvasDimLabel" class="text-xs text-gray-400 font-mono">1000 × 667 px</span>
         </div>
 
         <!-- Responsive Canvas Container -->
@@ -319,14 +353,25 @@
             />
             <button
               type="button"
-              id="btnSendTelegram"
-              class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+              id="btnTestTelegram"
+              class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-sm border border-gray-300 transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
             >
-              <span>🚀 ផ្ញើរូបភាពចូល Channel</span>
+              <span>🔍 សាកល្បងតភ្ជាប់</span>
+            </button>
+            <button
+              type="button"
+              id="btnSendTelegram"
+              class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+            >
+              <span>ផ្ញើចូល Telegram</span>
             </button>
           </div>
+
+          <!-- Inline Status / Error 429 Cooldown Banner -->
+          <div id="telegramStatusBanner" class="hidden rounded-xl px-3.5 py-2.5 text-xs font-semibold border"></div>
+
           <p class="text-[11px] text-gray-400">
-            * ចំណាំ៖ ត្រូវប្រាកដថាអ្នកបានបញ្ចូល Bot ជា Admin នៅក្នុង Channel ឬ Group របស់អ្នករួចរាល់ហើយ។ ព័ត៌មាន Token ត្រូវបានរក្សាទុកក្នុង Browser របស់អ្នកផ្ទាល់។
+            * ចំណាំ៖ ត្រូវប្រាកដថាអ្នកបានបញ្ចូល Bot ជា Admin នៅក្នុង Channel ឬ Group របស់អ្នករួចរាល់ហើយ។ ប្រព័ន្ធមានមុខងារការពារ Error 429 ដោយស្វ័យប្រវត្តិ។
           </p>
         </div>
       </div>
@@ -348,31 +393,35 @@
     const parseStatus = document.getElementById('parseStatus');
     const inputTime = document.getElementById('inputTime');
     const inputDate = document.getElementById('inputDate');
-    const inputA = document.getElementById('inputA');
-    const inputB = document.getElementById('inputB');
-    const inputC = document.getElementById('inputC');
-    const inputD = document.getElementById('inputD');
+    const inputA2 = document.getElementById('inputA2');
+    const inputA3 = document.getElementById('inputA3');
+    const inputB2 = document.getElementById('inputB2');
+    const inputB3 = document.getElementById('inputB3');
+    const inputC2 = document.getElementById('inputC2');
+    const inputC3 = document.getElementById('inputC3');
+    const inputD2 = document.getElementById('inputD2');
+    const inputD3 = document.getElementById('inputD3');
 
     const customTemplateInput = document.getElementById('customTemplateInput');
     const btnResetTemplate = document.getElementById('btnResetTemplate');
     const canvasDimLabel = document.getElementById('canvasDimLabel');
 
-    // Alignment Sliders
+    // Alignment Sliders (Calibrated for 1000x667)
     const defaultAlignConfig = {
-      timeX: 280,
-      dateX: 695,
-      headerY: 225,
-      headerSize: 62,
-      col2X: 482,
-      col3X: 772,
-      rowStartY: 336,
-      rowGap: 114,
-      numSize: 82
+      timeX: 235,
+      dateX: 580,
+      headerY: 188,
+      headerSize: 52,
+      col2X: 403,
+      col3X: 645,
+      rowStartY: 282,
+      rowGap: 95,
+      numSize: 68
     };
 
     let alignConfig = { ...defaultAlignConfig };
     try {
-      const savedAlign = localStorage.getItem('khmer_lottery_align_v1');
+      const savedAlign = localStorage.getItem('khmer_lottery_align_v2');
       if (savedAlign) alignConfig = { ...defaultAlignConfig, ...JSON.parse(savedAlign) };
     } catch (e) { /* Ignore storage errors */ }
 
@@ -383,6 +432,14 @@
       '08:35AM', '09:35AM', '10:35AM', '12:00PM', '01:00PM',
       '02:45PM', '03:45PM', '05:00PM', '06:00PM', '07:45PM'
     ];
+
+    const SAMPLE_LOTTERY_TEXT = `លទ្ធផលឆ្នោតខ្មែរ
+ពេលចេញលទ្ធផល: 24/11/2026 08:35
+រង្វាន់ទី1: 19432
+រង្វាន់ទី2: 76760
+រង្វាន់ទី3: 39415
+រង្វាន់ទី4: 98803
+សូមជូនពរសំណាងល្អ។`;
 
     /**
      * Show non-blocking Toast notification
@@ -396,7 +453,7 @@
         (type === 'error' ? 'bg-red-600' : type === 'info' ? 'bg-sky-600' : 'bg-emerald-600');
       box.classList.remove('hidden');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => box.classList.add('hidden'), 3500);
+      toastTimer = setTimeout(() => box.classList.add('hidden'), 4000);
     }
 
     /**
@@ -411,6 +468,14 @@
       hours = hours % 12;
       if (hours === 0) hours = 12;
       return `${hours}:${minutes}${ampm}`;
+    }
+
+    /**
+     * Helper to populate 2-digit and 3-digit inputs from a 5-digit string
+     */
+    function setSplitPrize(el2, el3, fiveDigits) {
+      el2.value = fiveDigits.slice(0, 2);
+      el3.value = fiveDigits.slice(2, 5);
     }
 
     /**
@@ -434,19 +499,19 @@
       const r3 = text.match(/រង្វាន់ទី\s*3\s*[:：\-]?\s*(\d{5})/);
       const r4 = text.match(/រង្វាន់ទី\s*4\s*[:：\-]?\s*(\d{5})/);
 
-      if (r1) { inputA.value = r1[1]; foundCount++; }
-      if (r2) { inputB.value = r2[1]; foundCount++; }
-      if (r3) { inputC.value = r3[1]; foundCount++; }
-      if (r4) { inputD.value = r4[1]; foundCount++; }
+      if (r1) { setSplitPrize(inputA2, inputA3, r1[1]); foundCount++; }
+      if (r2) { setSplitPrize(inputB2, inputB3, r2[1]); foundCount++; }
+      if (r3) { setSplitPrize(inputC2, inputC3, r3[1]); foundCount++; }
+      if (r4) { setSplitPrize(inputD2, inputD3, r4[1]); foundCount++; }
 
       // Fallback: if labels weren't matched, try finding any four 5-digit numbers in order
       if (!r1 && !r2 && !r3 && !r4) {
         const fiveDigits = text.match(/\b\d{5}\b/g);
         if (fiveDigits && fiveDigits.length >= 4) {
-          inputA.value = fiveDigits[0];
-          inputB.value = fiveDigits[1];
-          inputC.value = fiveDigits[2];
-          inputD.value = fiveDigits[3];
+          setSplitPrize(inputA2, inputA3, fiveDigits[0]);
+          setSplitPrize(inputB2, inputB3, fiveDigits[1]);
+          setSplitPrize(inputC2, inputC3, fiveDigits[2]);
+          setSplitPrize(inputD2, inputD3, fiveDigits[3]);
           foundCount += 4;
         }
       }
@@ -463,24 +528,7 @@
     }
 
     /**
-     * Draw a rounded rectangle helper
-     */
-    function drawRoundRect(ctx, x, y, w, h, r) {
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.lineTo(x + w - r, y);
-      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-      ctx.lineTo(x + w, y + h - r);
-      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-      ctx.lineTo(x + r, y + h);
-      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-      ctx.lineTo(x, y + r);
-      ctx.quadraticCurveTo(x, y, x + r, y);
-      ctx.closePath();
-    }
-
-    /**
-     * Draw the Alarm Clock Vector Icon on the Built-in Template
+     * Draw the Alarm Clock Vector Icon on the Built-in Template (1000x667 scale)
      */
     function drawAlarmClock(ctx, cx, cy) {
       const red = '#CC0000';
@@ -489,81 +537,81 @@
       // Left & Right Bells
       ctx.fillStyle = red;
       ctx.beginPath();
-      ctx.arc(cx - 42, cy - 42, 22, Math.PI * 0.75, Math.PI * 1.75);
+      ctx.arc(cx - 35, cy - 35, 18, Math.PI * 0.75, Math.PI * 1.75);
       ctx.fill();
 
       ctx.beginPath();
-      ctx.arc(cx + 42, cy - 42, 22, Math.PI * 1.25, Math.PI * 0.25);
+      ctx.arc(cx + 35, cy - 35, 18, Math.PI * 1.25, Math.PI * 0.25);
       ctx.fill();
 
       // Top Hammer
-      ctx.fillRect(cx - 5, cy - 66, 10, 14);
-      ctx.fillRect(cx - 16, cy - 68, 32, 6);
+      ctx.fillRect(cx - 4, cy - 55, 8, 12);
+      ctx.fillRect(cx - 13, cy - 57, 26, 5);
 
       // Legs
-      ctx.lineWidth = 7;
+      ctx.lineWidth = 6;
       ctx.strokeStyle = red;
       ctx.lineCap = 'round';
       ctx.beginPath();
-      ctx.moveTo(cx - 32, cy + 42);
-      ctx.lineTo(cx - 44, cy + 56);
-      ctx.moveTo(cx + 32, cy + 42);
-      ctx.lineTo(cx + 44, cy + 56);
+      ctx.moveTo(cx - 26, cy + 35);
+      ctx.lineTo(cx - 36, cy + 47);
+      ctx.moveTo(cx + 26, cy + 35);
+      ctx.lineTo(cx + 36, cy + 47);
       ctx.stroke();
 
       // Outer Clock Circle
       ctx.fillStyle = '#FFFFFF';
       ctx.beginPath();
-      ctx.arc(cx, cy, 52, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 43, 0, Math.PI * 2);
       ctx.fill();
-      ctx.lineWidth = 7;
+      ctx.lineWidth = 6;
       ctx.strokeStyle = red;
       ctx.stroke();
 
       // Tick marks
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2;
       for (let i = 0; i < 12; i++) {
         const angle = (i * Math.PI) / 6;
-        const r1 = 38;
-        const r2 = 44;
+        const r1 = 31;
+        const r2 = 37;
         ctx.beginPath();
         ctx.moveTo(cx + Math.cos(angle) * r1, cy + Math.sin(angle) * r1);
         ctx.lineTo(cx + Math.cos(angle) * r2, cy + Math.sin(angle) * r2);
         ctx.stroke();
       }
 
-      // Clock Hands (pointing ~11:18 like template)
+      // Clock Hands
       ctx.lineCap = 'round';
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3.5;
       ctx.beginPath();
       ctx.moveTo(cx, cy);
-      ctx.lineTo(cx - 5, cy - 28);
+      ctx.lineTo(cx - 4, cy - 23);
       ctx.stroke();
 
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(cx, cy);
-      ctx.lineTo(cx + 32, cy + 10);
+      ctx.lineTo(cx + 26, cy + 8);
       ctx.stroke();
 
       // Center dot
       ctx.fillStyle = red;
       ctx.beginPath();
-      ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
     }
 
     /**
-     * Draw the Right-Side Decorative Lottery Circles Logo in the Red Banner
+     * Draw the Right-Side Decorative Lottery Circles Logo in the Red Banner (1000x667 scale)
      */
     function drawBannerLogo(ctx) {
       const circles = [
-        { x: 925, y: 74, r: 44, char: 'ឆ្នោ', border: '#FACC15', size: 30 },
-        { x: 995, y: 84, r: 32, char: 'ត', border: '#FDE047', size: 28 },
-        { x: 1058, y: 70, r: 44, char: 'ខ្មែ', border: '#FB923C', size: 30 },
-        { x: 1118, y: 74, r: 32, char: 'រ', border: '#FDBA74', size: 28 }
+        { x: 771, y: 62, r: 37, char: 'ឆ្នោ', border: '#FACC15', size: 25 },
+        { x: 829, y: 70, r: 27, char: 'ត', border: '#FDE047', size: 23 },
+        { x: 882, y: 58, r: 37, char: 'ខ្មែ', border: '#FB923C', size: 25 },
+        { x: 932, y: 62, r: 27, char: 'រ', border: '#FDBA74', size: 23 }
       ];
 
       circles.forEach(c => {
@@ -573,7 +621,7 @@
         ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 4;
         ctx.strokeStyle = c.border;
         ctx.stroke();
 
@@ -581,25 +629,38 @@
         ctx.font = `900 ${c.size}px "Battambang", "Noto Sans Khmer", sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(c.char, c.x, c.y + 3);
+        ctx.fillText(c.char, c.x, c.y + 2);
         ctx.restore();
       });
 
       // Tagline below circles
       ctx.save();
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '700 22px "Battambang", "Noto Sans Khmer", sans-serif';
+      ctx.font = '700 18px "Battambang", "Noto Sans Khmer", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('លេងស្រួល ងាយឈ្នះ', 1020, 146);
+      ctx.fillText('លេងស្រួល ងាយឈ្នះ', 850, 122);
       ctx.restore();
     }
 
     /**
-     * Render the Built-in High-Res Lottery Template (1200 x 800)
+     * Helper to draw rounded rectangle path cleanly across all browsers
+     */
+    function drawRoundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    /**
+     * Render the Built-in High-Res Lottery Template (1000 x 667)
      */
     function drawBuiltInTemplate() {
-      const W = 1200;
-      const H = 800;
+      const W = 1000;
+      const H = 667;
       canvas.width = W;
       canvas.height = H;
       canvasDimLabel.textContent = `${W} × ${H} px`;
@@ -612,15 +673,15 @@
 
       // 2. Top Red Header Banner
       ctx.fillStyle = RED;
-      ctx.fillRect(0, 0, W, 170);
+      ctx.fillRect(0, 0, W, 142);
 
       // Main Header Khmer Title
       ctx.save();
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '900 94px "Battambang", "Noto Sans Khmer", sans-serif';
+      ctx.font = '900 78px "Battambang", "Noto Sans Khmer", sans-serif';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
-      ctx.fillText('លទ្ធផលឆ្នោតខ្មែរ', 95, 95);
+      ctx.fillText('លទ្ធផលឆ្នោតខ្មែរ', 78, 79);
       ctx.restore();
 
       // Header Right Emblem
@@ -628,34 +689,34 @@
 
       // 3. Bottom Red Footer Bar
       ctx.fillStyle = RED;
-      ctx.fillRect(0, 752, W, 48);
+      ctx.fillRect(0, 627, W, 40);
 
       // 4. Right Sidebar: Alarm Clock & Time Schedule Pills
-      const sidebarX = 1062;
-      drawAlarmClock(ctx, sidebarX, 242);
+      const sidebarX = 885;
+      drawAlarmClock(ctx, sidebarX, 202);
 
       const normalizedInputTime = inputTime.value.trim().toUpperCase().replace(/^(\d):/, '0$1:');
       SCHEDULE_TIMES.forEach((slot, idx) => {
-        const pillY = 310 + idx * 43;
-        const pillW = 108;
-        const pillH = 34;
+        const pillY = 258 + idx * 36;
+        const pillW = 90;
+        const pillH = 28;
         const isActive = slot === normalizedInputTime;
 
         ctx.save();
-        drawRoundRect(ctx, sidebarX - pillW / 2, pillY, pillW, pillH, 17);
+        drawRoundRect(ctx, sidebarX - pillW / 2, pillY, pillW, pillH, 14);
         if (isActive) {
           ctx.fillStyle = RED;
           ctx.fill();
         } else {
           ctx.fillStyle = '#FFFFFF';
           ctx.fill();
-          ctx.lineWidth = 2.2;
+          ctx.lineWidth = 2;
           ctx.strokeStyle = RED;
           ctx.stroke();
         }
 
         ctx.fillStyle = isActive ? '#FFFFFF' : RED;
-        ctx.font = '700 16px "Roboto", sans-serif';
+        ctx.font = '700 13.5px "Roboto", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(slot, sidebarX, pillY + pillH / 2 + 1);
@@ -664,18 +725,18 @@
 
       // 5. Main 4-Row Grid (A, B, C, D)
       const letters = ['A', 'B', 'C', 'D'];
-      const col1X = 124;
-      const col1W = 222;
-      const col2X = 354;
-      const col2W = 272;
-      const col3X = 634;
-      const col3W = 294;
-      const startY = 278;
-      const rowH = 106;
-      const rowGap = 8;
+      const col1X = 103;
+      const col1W = 185;
+      const col2X = 295;
+      const col2W = 226;
+      const col3X = 528;
+      const col3W = 245;
+      const startY = 232;
+      const rowH = 88;
+      const rowGap = 7;
 
       ctx.strokeStyle = RED;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2.5;
 
       letters.forEach((letter, idx) => {
         const y = startY + idx * (rowH + rowGap);
@@ -690,30 +751,30 @@
         const centerY = y + rowH / 2;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 44, 0, Math.PI * 2);
-        ctx.lineWidth = 6.5;
+        ctx.arc(centerX, centerY, 37, 0, Math.PI * 2);
+        ctx.lineWidth = 5.5;
         ctx.strokeStyle = RED;
         ctx.stroke();
 
         ctx.fillStyle = RED;
-        ctx.font = '900 58px "Roboto", sans-serif';
+        ctx.font = '900 48px "Roboto", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(letter, centerX, centerY + 3);
+        ctx.fillText(letter, centerX, centerY + 2);
         ctx.restore();
       });
 
       // 6. Draw Dynamic Time, Date & Prize Numbers
       drawDynamicTextOverlay({
-        timeX: 280,
-        dateX: 695,
-        headerY: 226,
-        headerSize: 62,
+        timeX: 235,
+        dateX: 580,
+        headerY: 188,
+        headerSize: 52,
         col2X: col2X + col2W / 2,
         col3X: col3X + col3W / 2,
         rowStartY: startY + rowH / 2,
         rowGap: rowH + rowGap,
-        numSize: 80
+        numSize: 68
       });
     }
 
@@ -732,22 +793,19 @@
       ctx.fillText(inputTime.value.trim(), cfg.timeX, cfg.headerY);
       ctx.fillText(inputDate.value.trim(), cfg.dateX, cfg.headerY);
 
-      // Prize Rows A, B, C, D
-      const rawPrizes = [
-        inputA.value.trim(),
-        inputB.value.trim(),
-        inputC.value.trim(),
-        inputD.value.trim()
+      // Prize Rows A, B, C, D directly from 2-digit and 3-digit inputs
+      const splitPrizes = [
+        [inputA2.value.trim(), inputA3.value.trim()],
+        [inputB2.value.trim(), inputB3.value.trim()],
+        [inputC2.value.trim(), inputC3.value.trim()],
+        [inputD2.value.trim(), inputD3.value.trim()]
       ];
 
       ctx.font = `900 ${cfg.numSize}px "Roboto", sans-serif`;
-      rawPrizes.forEach((val, idx) => {
+      splitPrizes.forEach(([twoDigits, threeDigits], idx) => {
         const y = cfg.rowStartY + idx * cfg.rowGap;
-        const twoDigits = val.slice(0, 2);
-        const threeDigits = val.slice(2, 5);
-
-        if (twoDigits) ctx.fillText(twoDigits, cfg.col2X, y + 3);
-        if (threeDigits) ctx.fillText(threeDigits, cfg.col3X, y + 3);
+        if (twoDigits) ctx.fillText(twoDigits, cfg.col2X, y + 2);
+        if (threeDigits) ctx.fillText(threeDigits, cfg.col3X, y + 2);
       });
 
       ctx.restore();
@@ -758,8 +816,8 @@
      */
     function renderCanvas() {
       if (customTemplateImage) {
-        const W = customTemplateImage.naturalWidth || 1200;
-        const H = customTemplateImage.naturalHeight || 800;
+        const W = customTemplateImage.naturalWidth || 1000;
+        const H = customTemplateImage.naturalHeight || 667;
         canvas.width = W;
         canvas.height = H;
         canvasDimLabel.textContent = `${W} × ${H} px`;
@@ -779,7 +837,7 @@
       parseRawText(rawTextInput.value);
     });
 
-    [inputTime, inputDate, inputA, inputB, inputC, inputD].forEach(el => {
+    [inputTime, inputDate, inputA2, inputA3, inputB2, inputB3, inputC2, inputC3, inputD2, inputD3].forEach(el => {
       el.addEventListener('input', renderCanvas);
     });
 
@@ -796,6 +854,13 @@
         rawTextInput.focus();
         showToast('សូមចុច Paste (Ctrl+V ឬ សង្កត់លើប្រអប់អក្សរ) ដោយផ្ទាល់', 'info');
       }
+    });
+
+    // Sample Data Button
+    document.getElementById('btnSampleText').addEventListener('click', () => {
+      rawTextInput.value = SAMPLE_LOTTERY_TEXT;
+      parseRawText(SAMPLE_LOTTERY_TEXT);
+      showToast('✨ បានបញ្ចូលទិន្នន័យគំរូរួចរាល់!');
     });
 
     // Clear Text Button
@@ -863,7 +928,7 @@
         alignConfig[key] = parseInt(slider.value, 10);
         label.textContent = alignConfig[key];
         try {
-          localStorage.setItem('khmer_lottery_align_v1', JSON.stringify(alignConfig));
+          localStorage.setItem('khmer_lottery_align_v2', JSON.stringify(alignConfig));
         } catch (e) {}
         renderCanvas();
       });
@@ -873,7 +938,7 @@
       alignConfig = { ...defaultAlignConfig };
       syncSlidersFromConfig();
       try {
-        localStorage.removeItem('khmer_lottery_align_v1');
+        localStorage.removeItem('khmer_lottery_align_v2');
       } catch (e) {}
       renderCanvas();
       showToast('បានកំណត់ទីតាំងដើមឡើងវិញ');
@@ -923,6 +988,12 @@
     const tgBotToken = document.getElementById('tgBotToken');
     const tgChatId = document.getElementById('tgChatId');
     const tgCaption = document.getElementById('tgCaption');
+    const btnSendTelegram = document.getElementById('btnSendTelegram');
+    const telegramStatusBanner = document.getElementById('telegramStatusBanner');
+
+    let isSendingTelegram = false;
+    let rateLimitTimerId = null;
+    const RATE_LIMIT_STORAGE_KEY = 'khmer_lottery_tg_cooldown_until';
 
     try {
       tgBotToken.value = localStorage.getItem('khmer_lottery_tg_token') || '';
@@ -936,23 +1007,151 @@
       try { localStorage.setItem('khmer_lottery_tg_chatid', tgChatId.value.trim()); } catch (e) {}
     });
 
-    // Send Photo directly to Telegram Channel/Group via Bot API
-    document.getElementById('btnSendTelegram').addEventListener('click', () => {
+    function setTelegramBanner(message, type = 'info') {
+      if (!message) {
+        telegramStatusBanner.classList.add('hidden');
+        return;
+      }
+      telegramStatusBanner.textContent = message;
+      telegramStatusBanner.classList.remove('hidden');
+      if (type === 'error') {
+        telegramStatusBanner.className = 'rounded-xl px-3.5 py-2.5 text-xs font-semibold border bg-red-50 border-red-200 text-red-700';
+      } else if (type === 'warning') {
+        telegramStatusBanner.className = 'rounded-xl px-3.5 py-2.5 text-xs font-semibold border bg-amber-50 border-amber-200 text-amber-800';
+      } else {
+        telegramStatusBanner.className = 'rounded-xl px-3.5 py-2.5 text-xs font-semibold border bg-emerald-50 border-emerald-200 text-emerald-700';
+      }
+    }
+
+    const btnTestTelegram = document.getElementById('btnTestTelegram');
+
+    function startRateLimitCooldown(seconds) {
+      if (rateLimitTimerId) clearInterval(rateLimitTimerId);
+      const safeSeconds = Math.max(1, parseInt(seconds, 10) || 30);
+      const cooldownUntil = Date.now() + safeSeconds * 1000;
+      try {
+        localStorage.setItem(RATE_LIMIT_STORAGE_KEY, String(cooldownUntil));
+      } catch (e) {}
+
+      const updateCooldownUI = () => {
+        const remaining = Math.ceil((cooldownUntil - Date.now()) / 1000);
+        if (remaining > 0) {
+          btnSendTelegram.disabled = true;
+          btnTestTelegram.disabled = true;
+          btnSendTelegram.innerHTML = `<span>⏳ រង់ចាំ ${remaining} វិនាទី...</span>`;
+          setTelegramBanner(
+            `⚠️ Telegram ផ្អាក Token នេះបណ្ដោះអាសន្ន (Error 429)។ សូមរង់ចាំ ${remaining} វិនាទី ដោយកុំទាន់ចុចអ្វីទាំងអស់!`,
+            'warning'
+          );
+        } else {
+          clearInterval(rateLimitTimerId);
+          rateLimitTimerId = null;
+          isSendingTelegram = false;
+          btnSendTelegram.disabled = false;
+          btnTestTelegram.disabled = false;
+          btnSendTelegram.innerHTML = '<span>ផ្ញើចូល Telegram</span>';
+          try { localStorage.removeItem(RATE_LIMIT_STORAGE_KEY); } catch (e) {}
+          setTelegramBanner('✅ ផុតកំណត់រង់ចាំហើយ! អ្នកអាចផ្ញើរូបភាពចូល Telegram ម្ដងទៀតបាន។', 'success');
+        }
+      };
+
+      updateCooldownUI();
+      rateLimitTimerId = setInterval(updateCooldownUI, 1000);
+    }
+
+    // Restore active cooldown if page was refreshed during a 429 lock
+    try {
+      const savedUntil = parseInt(localStorage.getItem(RATE_LIMIT_STORAGE_KEY) || '0', 10);
+      if (savedUntil > Date.now()) {
+        startRateLimitCooldown(Math.ceil((savedUntil - Date.now()) / 1000));
+      }
+    } catch (e) {}
+
+    // Helper to clean Chat ID (e.g. converts https://t.me/mychannel -> @mychannel)
+    function normalizeChatId(rawId) {
+      let id = rawId.trim();
+      if (id.startsWith('https://t.me/')) {
+        id = '@' + id.replace('https://t.me/', '').split('/')[0];
+      } else if (id.startsWith('t.me/')) {
+        id = '@' + id.replace('t.me/', '').split('/')[0];
+      }
+      return id;
+    }
+
+    // Single lightweight request (getChat) to verify both Token & Channel Admin access
+    btnTestTelegram.addEventListener('click', async () => {
+      if (rateLimitTimerId) return;
+
       const token = tgBotToken.value.trim();
-      const chatId = tgChatId.value.trim();
+      const chatId = normalizeChatId(tgChatId.value);
+      tgChatId.value = chatId;
+
+      if (!token || !chatId) {
+        setTelegramBanner('⚠️ សូមបំពេញ Bot Token និង Channel/Chat ID ជាមុនសិន!', 'error');
+        return;
+      }
+
+      btnTestTelegram.disabled = true;
+      btnTestTelegram.innerHTML = '<span>⏳ កំពុងពិនិត្យ...</span>';
+      setTelegramBanner('កំពុងពិនិត្យការតភ្ជាប់ទៅ Channel...', 'info');
+
+      let inCooldown = false;
+      try {
+        const chatRes = await fetch(`https://api.telegram.org/bot${token}/getChat?chat_id=${encodeURIComponent(chatId)}`);
+        const chatData = await chatRes.json();
+
+        if (chatData.ok) {
+          const title = chatData.result.title || chatId;
+          setTelegramBanner(`✅ តភ្ជាប់ជោគជ័យ! Bot ស្គាល់ Channel "${title}" ហើយ។`, 'success');
+        } else if (chatRes.status === 429 || chatData.error_code === 429) {
+          inCooldown = true;
+          const retryAfter = chatData.parameters?.retry_after || 60;
+          startRateLimitCooldown(retryAfter);
+        } else {
+          setTelegramBanner(`❌ បរាជ័យ៖ ${chatData.description}`, 'error');
+        }
+      } catch (err) {
+        setTelegramBanner(
+          '❌ Browser បានប្លុកការតភ្ជាប់ (CORS / Sandbox Restriction)។ សូមទាញយកឯកសារ .html នេះទៅបើកលើ Chrome/Safari ផ្ទាល់។',
+          'error'
+        );
+      } finally {
+        if (!inCooldown) {
+          btnTestTelegram.disabled = false;
+          btnTestTelegram.innerHTML = '<span>🔍 សាកល្បងតភ្ជាប់</span>';
+        }
+      }
+    });
+
+    btnSendTelegram.addEventListener('click', () => {
+      if (isSendingTelegram || rateLimitTimerId) return;
+
+      const token = tgBotToken.value.trim();
+      const chatId = normalizeChatId(tgChatId.value);
+      tgChatId.value = chatId;
       const caption = tgCaption.value.trim();
 
       if (!token || !chatId) {
+        setTelegramBanner('⚠️ សូមបំពេញ Bot Token និង Channel/Chat ID ជាមុនសិន!', 'error');
         showToast('⚠️ សូមបំពេញ Bot Token និង Channel/Chat ID ជាមុនសិន!', 'error');
         return;
       }
 
-      const btn = document.getElementById('btnSendTelegram');
-      const originalHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span>⏳ កំពុងផ្ញើរូបភាព...</span>';
+      isSendingTelegram = true;
+      btnSendTelegram.disabled = true;
+      btnSendTelegram.innerHTML = '<span>⏳ កំពុងផ្ញើ...</span>';
+      setTelegramBanner('', 'info');
 
       canvas.toBlob(async (blob) => {
+        if (!blob) {
+          isSendingTelegram = false;
+          btnSendTelegram.disabled = false;
+          btnSendTelegram.innerHTML = '<span>ផ្ញើចូល Telegram</span>';
+          setTelegramBanner('❌ មិនអាចបង្កើតឯកសាររូបភាពបានទេ', 'error');
+          return;
+        }
+
+        let inCooldown = false;
         try {
           const formData = new FormData();
           formData.append('chat_id', chatId);
@@ -965,18 +1164,33 @@
             method: 'POST',
             body: formData
           });
-          const result = await response.json();
+          const data = await response.json();
 
-          if (result.ok) {
+          if (data.ok) {
+            setTelegramBanner('✅ បានបង្ហោះរូបភាពចូល Telegram Channel ដោយជោគជ័យ!', 'success');
             showToast('🚀 បានបង្ហោះរូបភាពចូល Telegram Channel ដោយជោគជ័យ!');
+          } else if (response.status === 429 || data.error_code === 429) {
+            inCooldown = true;
+            const retryAfter = data.parameters?.retry_after || 30;
+            showToast(`⚠️ ផ្ញើញឹកញាប់ពេក (429)! សូមរង់ចាំ ${retryAfter} វិនាទី`, 'error');
+            startRateLimitCooldown(retryAfter);
           } else {
-            showToast(`❌ បរាជ័យ៖ ${result.description || 'សូមពិនិត្យ Token និងសិទ្ធិ Admin របស់ Bot'}`, 'error');
+            const errMsg = data.description || 'សូមពិនិត្យ Token និងសិទ្ធិ Admin របស់ Bot';
+            setTelegramBanner(`❌ Telegram បដិសេធ៖ ${errMsg}`, 'error');
+            showToast(`❌ បរាជ័យ៖ ${errMsg}`, 'error');
           }
         } catch (err) {
-          showToast('❌ មានបញ្ហាការតភ្ជាប់អ៊ីនធឺណិត ឬ Token មិនត្រឹមត្រូវ', 'error');
+          setTelegramBanner(
+            '❌ មិនអាចផ្ញើចេញពីផ្ទាំង Preview នេះបានទេ (CORS/Network Blocked)។ សូមរក្សាទុកឯកសារ .html នេះទៅបើកលើ Browser (Chrome/Safari) ផ្ទាល់!',
+            'error'
+          );
+          showToast('❌ Browser ប្លុកការផ្ញើ! សូមបើកឯកសារ .html លើ Chrome/Safari ផ្ទាល់', 'error');
         } finally {
-          btn.disabled = false;
-          btn.innerHTML = originalHtml;
+          if (!inCooldown) {
+            isSendingTelegram = false;
+            btnSendTelegram.disabled = false;
+            btnSendTelegram.innerHTML = '<span>ផ្ញើចូល Telegram</span>';
+          }
         }
       }, 'image/jpeg', 0.95);
     });
