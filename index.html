@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#b91c1c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ឆ្នោតខ្មែរ" />
+  <link id="pwaManifestLink" rel="manifest" />
+  <link id="appleTouchIcon" rel="apple-touch-icon" />
   <title>កម្មវិធីបង្កើតរូបភាពលទ្ធផលឆ្នោតខ្មែរ</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -45,9 +51,14 @@
           <p class="text-xs text-red-100">បំប្លែងអក្សរទៅជារូបភាពរហ័សទាន់ចិត្ត &amp; ផ្ញើចូល Telegram ផ្ទាល់</p>
         </div>
       </div>
-      <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-800/70 border border-red-400/30">
-        HTML5 Canvas Pro
-      </span>
+      <div class="flex items-center gap-2">
+        <button type="button" id="btnInstallPWA" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white text-red-700 hover:bg-red-50 shadow-sm transition cursor-pointer">
+          <span>📲 ដំឡើង App</span>
+        </button>
+        <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-800/70 border border-red-400/30">
+          PWA Ready
+        </span>
+      </div>
     </div>
   </header>
 
@@ -1352,8 +1363,108 @@
       }, 'image/jpeg', 0.95);
     });
 
+    /**
+     * ============================================================================
+     * PWA (PROGRESSIVE WEB APP) SETUP: MANIFEST, ICON, SERVICE WORKER & INSTALL
+     * ============================================================================
+     */
+    function setupPWA() {
+      // Generate SVG App Icon as Data URI for Manifest & Apple Touch Icon
+      const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <rect width="512" height="512" rx="112" fill="#CC0000"/>
+        <circle cx="256" cy="256" r="190" fill="#FFFFFF"/>
+        <circle cx="256" cy="256" r="170" fill="none" stroke="#FBB03B" stroke-width="18"/>
+        <text x="256" y="282" font-family="sans-serif" font-size="115" font-weight="900" fill="#CC0000" text-anchor="middle">ឆ្នោត</text>
+      </svg>`;
+      const iconUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg);
+
+      const appleIcon = document.getElementById('appleTouchIcon');
+      if (appleIcon) appleIcon.href = iconUrl;
+
+      // Dynamic Web App Manifest
+      const manifestData = {
+        name: 'កម្មវិធីបង្កើតរូបភាពលទ្ធផលឆ្នោតខ្មែរ',
+        short_name: 'ឆ្នោតខ្មែរ',
+        description: 'បំប្លែងអក្សរលទ្ធផលឆ្នោតខ្មែរទៅជារូបភាព និងបង្ហោះចូល Telegram ដោយស្វ័យប្រវត្តិ',
+        start_url: location.href,
+        display: 'standalone',
+        background_color: '#f3f4f6',
+        theme_color: '#b91c1c',
+        icons: [
+          { src: iconUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
+          { src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+        ]
+      };
+
+      const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/manifest+json' });
+      const manifestLink = document.getElementById('pwaManifestLink');
+      if (manifestLink) manifestLink.href = URL.createObjectURL(manifestBlob);
+
+      // Register Service Worker for Offline Caching (works when served over HTTPS/localhost)
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+        const swCode = `
+          const CACHE_NAME = 'khmer-lottery-pwa-v1';
+          self.addEventListener('install', (e) => {
+            self.skipWaiting();
+          });
+          self.addEventListener('activate', (e) => {
+            e.waitUntil(clients.claim());
+          });
+          self.addEventListener('fetch', (e) => {
+            if (e.request.method !== 'GET' || e.request.url.includes('api.telegram.org')) return;
+            e.respondWith(
+              caches.match(e.request).then((cached) => {
+                return cached || fetch(e.request).then((resp) => {
+                  const copy = resp.clone();
+                  caches.open(CACHE_NAME).then((cache) => cache.put(e.request, copy));
+                  return resp;
+                }).catch(() => cached);
+              })
+            );
+          });
+        `;
+        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+      }
+
+      // Handle BeforeInstallPrompt for One-Click App Installation
+      let deferredPrompt = null;
+      const btnInstallPWA = document.getElementById('btnInstallPWA');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (btnInstallPWA) {
+          btnInstallPWA.classList.remove('hidden');
+          btnInstallPWA.classList.add('inline-flex');
+        }
+      });
+
+      if (btnInstallPWA) {
+        btnInstallPWA.addEventListener('click', async () => {
+          if (!deferredPrompt) {
+            showToast('សូមចុចម៉ឺនុយ Browser ➔ "Add to Home Screen" ដើម្បីដំឡើង App', 'info');
+            return;
+          }
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            btnInstallPWA.classList.add('hidden');
+            showToast('📲 បានដំឡើងកម្មវិធីលើអេក្រង់រួចរាល់!');
+          }
+          deferredPrompt = null;
+        });
+      }
+
+      window.addEventListener('appinstalled', () => {
+        if (btnInstallPWA) btnInstallPWA.classList.add('hidden');
+        deferredPrompt = null;
+      });
+    }
+
     // Initial Boot
     window.addEventListener('load', () => {
+      setupPWA();
       syncSlidersFromConfig();
       // Wait for Google Fonts to finish loading before initial draw
       if (document.fonts && document.fonts.ready) {
